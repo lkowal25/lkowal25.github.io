@@ -430,6 +430,31 @@
     }
   }
   createProjects();
+
+  const coll = document.getElementsByClassName('collapsible');
+  const video = document.getElementById('google-sheets-video');
+
+  for (let i = 0; i < coll.length; i++) {
+    coll[i].addEventListener('click', function () {
+      this.classList.toggle('active');
+      const content = this.nextElementSibling;
+      if (content.style.display === 'block') {
+        content.style.display = 'none';
+        coll[i].innerText = 'Open Video';
+        video.contentWindow.postMessage(
+          '{"event":"command","func":"' + 'pauseVideo' + '","args":""}',
+          '*'
+        );
+      } else {
+        coll[i].innerText = 'Close Video';
+        content.style.display = 'block';
+        video.contentWindow.postMessage(
+          '{"event":"command","func":"' + 'playVideo' + '","args":""}',
+          '*'
+        );
+      }
+    });
+  }
   /**
    * Initiate Pure Counter
    */
