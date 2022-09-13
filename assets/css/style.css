@@ -402,39 +402,49 @@ section .container {
 /*--------------------------------------------------------------
 # About
 --------------------------------------------------------------*/
-.about-me .content h3 {
+.about-me .container h3 {
   font-weight: 700;
   font-size: 26px;
   color: #18d26e;
 }
 
-.about-me .content ul {
+.about-me .container ul {
   list-style: none;
   padding: 0;
 }
 
-.about-me .content ul li {
+.about-me .container ul li {
   margin-bottom: 20px;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-
   align-items: center;
   border-width: 20px;
 }
 
-.about-me .content ul strong {
+.about-me .container ul strong {
   margin-right: 10px;
 }
 
-.about-me .content ul i {
+.about-me .container ul i {
   font-size: 16px;
   margin-right: 5px;
   color: #18d26e;
   line-height: 0;
 }
 
-.about-me .content p:last-child {
+.about-me .container b {
+  text-decoration: underline;
+  font-size: larger;
+}
+
+.about-me p:last-child {
+  margin-bottom: 0;
+}
+
+.about-me #summary {
+  padding-left: 5rem;
+  padding-right: 5rem;
   margin-bottom: 0;
 }
 
