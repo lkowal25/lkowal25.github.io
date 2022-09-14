@@ -646,6 +646,8 @@ section .container {
   margin-top: 20px;
   margin-bottom: 20px;
   color: #fff;
+  text-decoration: underline;
+  font-weight: bold;
 }
 
 .resume .resume-item {
@@ -663,6 +665,10 @@ section .container {
   font-family: 'Poppins', sans-serif;
   color: #18d26e;
   margin-bottom: 10px;
+}
+
+.resume .resume-item b {
+  text-decoration: underline;
 }
 
 .resume .resume-item h5 {
