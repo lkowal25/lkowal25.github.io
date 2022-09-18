@@ -4,10 +4,180 @@
  * Author: BootstrapMade.com
  * License: https://bootstrapmade.com/license/
  */
+const techSkills = {};
+const GITHUB_API_TOKEN = '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';
 
 (function () {
   'use strict';
 
+  function requestUserData() {
+    // Create new XMLHttpRequest object
+    const xhr = new XMLHttpRequest();
+
+    // GitHub endpoint, dynamically passing in specified username
+    const url = `https://api.github.com/user`;
+
+    // Open a new connection, using a GET request via URL endpoint
+    // Providing 3 arguments (GET/POST, The URL, Async True/False)
+    xhr.open('GET', url, true);
+    xhr.setRequestHeader('Authorization', `token ${GITHUB_API_TOKEN}`);
+    // When request is received
+    // Process it here
+
+    xhr.onload = function () {
+      // Parse API data into JSON
+      const data = JSON.parse(this.response);
+      // console.log('DATA ARRAY', data);
+
+      //set the total project count
+      const projectCount = document.getElementById('project-counter');
+      projectCount.setAttribute(
+        'data-purecounter-end',
+        `${data.public_repos + data.total_private_repos}`
+      );
+
+      //set the public github count
+      const publicGithubCount = document.getElementById(
+        'public-github-counter'
+      );
+      publicGithubCount.setAttribute(
+        `data-purecounter-end`,
+        `${data.public_repos}`
+      );
+
+      //1. take these and put them into HTML
+      //2. Make the next API call for repos
+      //3. Inside that API call do a for loop to call the contents
+    };
+    // Send the request to the server
+    xhr.send();
+  }
+
+  function getOrginizations() {
+    const xhr = new XMLHttpRequest();
+    const url = 'https://api.github.com/user/memberships/orgs';
+
+    xhr.open('GET', url, true);
+    xhr.setRequestHeader('Authorization', `token ${GITHUB_API_TOKEN}`);
+
+    xhr.onload = function () {
+      const orginzaitons = JSON.parse(this.response);
+      // console.log('HERE ARE THE ORGS', orginzaitons);
+      for (let i = 0; i < orginzaitons.length; i++) {
+        const {
+          organization: { login },
+        } = orginzaitons[i];
+        if (login === 'FullstackAcademy') continue;
+        getOrginizationRepos(login);
+      }
+    };
+
+    xhr.send();
+  }
+
+  function getOrginizationRepos(org) {
+    const xhr = new XMLHttpRequest();
+    const url = `https://api.github.com/orgs/${org}/repos`;
+
+    xhr.open('GET', url, true);
+    xhr.setRequestHeader('Authorization', `token ${GITHUB_API_TOKEN}`);
+
+    xhr.onload = function () {
+      const orginzaitons = JSON.parse(this.response);
+      // console.log('HERE ARE THE ORGS', orginzaitons);
+      for (let i = 0; i < orginzaitons.length; i++) {
+        const {
+          name,
+          owner: { login },
+        } = orginzaitons[i];
+
+        return getPackageJSON(login, name);
+      }
+    };
+
+    xhr.send();
+  }
+  let newArr = [];
+  let counter = 0;
+  async function getPackageJSON(owner, repo) {
+    const url = `https://raw.githubusercontent.com/${owner}/${repo}/master/package.json`;
+
+    const raw = await fetch(url).then((response) => response.json());
+    const { dependencies, devDependencies } = raw;
+    // console.log('DEP', dependencies, devDependencies);
+    for (let tech in dependencies) {
+      // console.log('TECH', tech);
+      if (techSkills[tech]) techSkills[tech] += 1;
+      else techSkills[tech] = 1;
+      counter++;
+    }
+    //had to harcode
+    if (counter >= 301) createHTMLFromTechSkills(techSkills, counter);
+  }
+
+  function createHTMLFromTechSkills(techSkills, length) {
+    const progressBarContainer1 =
+      document.getElementsByClassName('progress-bars-1')[0];
+    const progressBarContainer2 =
+      document.getElementsByClassName('progress-bars-2')[0];
+    let count = 0;
+    let sortedTech = [];
+    for (let key in techSkills) {
+      sortedTech.push([key, techSkills[key]]);
+    }
+    sortedTech.sort((a, b) => b[1] - a[1]);
+
+    for (let i = 0; i < sortedTech.length; i++) {
+      const [tech, techCount] = sortedTech[i];
+
+      const progressBars = `<div class=progress>
+        <span class=skill>${tech}<i class=val># Projects Skill Used: ${techCount}
+        </i></span>
+        <div class=progress-bar-wrap>
+          <div class=progress-bar role=progressbar aria-valuenow=${
+            (techCount / 76) * 100
+          }
+           aria-valuemin=0 aria-valuemax=${length}></div>
+        </div>
+      </div>`;
+
+      count++;
+
+      if (count <= sortedTech.length / 2) {
+        progressBarContainer1.innerHTML += progressBars;
+      } else progressBarContainer2.innerHTML += progressBars;
+    }
+  }
+
+  function requestUserRepos() {
+    const xhr = new XMLHttpRequest();
+
+    const url = `https://api.github.com/user/repos`;
+    xhr.open('GET', url, true);
+    xhr.setRequestHeader('Authorization', `token ${GITHUB_API_TOKEN}`);
+
+    xhr.onload = function () {
+      const data = JSON.parse(this.response);
+
+      for (let i = 0; i < data.length; i++) {
+        const {
+          name,
+          owner: { login },
+          language,
+        } = data[i];
+
+        getPackageJSON(login, name);
+      }
+    };
+
+    xhr.send();
+  }
+
+  let skills = [];
+
+  function deployedProjectsList() {
+    const deployed = [['Hot-Kicks', '']];
+  }
   /**
    * Easy selector helper function
    */
@@ -257,128 +427,52 @@
     const projectsContainer =
       document.getElementsByClassName('projects-container')[0];
 
-    const progressBarContainer1 =
-      document.getElementsByClassName('progress-bars-1')[0];
-    const progressBarContainer2 =
-      document.getElementsByClassName('progress-bars-2')[0];
+    const proficient = [
+      'Javascript (node.js)',
+      'Excel',
+      'Google Sheets / Documents',
+      'React',
+      'Redux',
+      'HTML 5 / CSS',
+      'JWT / bcrypt',
+      'PostgreSQL',
+      'Sequelize',
+      'Express',
+      'Howler',
+      'Microsoft word',
+      'PowerPoint',
+      'Outlook',
+    ];
 
-    const proficient =
-      ' Javascript (node.js), Excel, Google Sheets / Documents, React, Redux, HTML 5 / CSS, JWT / bcrypt, PostgreSQL, Sequelize, Express, Howler, Microsoft word, PowerPoint, Outlook'.split(
-        ','
-      );
-
-    const knowledgeable =
-      'Ubuntu, PowerShell, AWS Cloud 9, React-collapse, webpack-cli, babel, React-bootstrap, Python'.split(
-        ','
-      );
+    const knowledgeable = [
+      'Ubuntu',
+      'PowerShell',
+      'AWS Cloud 9',
+      'React-collapse',
+      'webpack-cli',
+      'babel',
+      'React-bootstrap',
+      'Python',
+    ];
+    console.log('K L', knowledgeable.length);
     const projectsArray = [
       {
-        name: 'THIS IS THE FIRST World',
-        techStack: ['HTML5', 'CSS'],
-        dateCompleted: '6/1/22',
+        name: 'Grace-Shopper',
+        dateCompleted: '6/22/22',
       },
       {
-        name: 'Second Project',
-        techStack: ['CSS', 'React', 'Redux', 'Blah'],
-        dateCompleted: '7/2/22',
+        name: 'Hot-Kicks',
+        dateCompleted: '6/21/22',
+        link: 'https://hot-kicks.herokuapp.com/',
       },
       {
-        name: 'Third',
-        techStack: ['next', 'react', 'this'],
-        dateCompleted: '6/6/22',
-      },
-      {
-        name: 'Fourth',
-        techStack: ['next', 'react', 'this'],
-        dateCompleted: '6/6/22',
-      },
-      {
-        name: 'Fifth',
-        techStack: ['next', 'react', 'this'],
-        dateCompleted: '6/6/22',
-      },
-      {
-        name: 'Sixth',
-        techStack: ['next', 'react', 'this'],
-        dateCompleted: '6/6/22',
-      },
-      {
-        name: 'Sixth',
-        techStack: [
-          'next',
-          'react',
-          'this',
-          'a',
-          'idk',
-          'add more',
-          'set another',
-        ],
-        dateCompleted: '6/6/22',
-      },
-      {
-        name: 'Sixth',
-        techStack: ['next', 'react', 'this'],
-        dateCompleted: '6/6/22',
-      },
-      {
-        name: 'Sixth',
-        techStack: ['next', 'react', 'this'],
-        dateCompleted: '6/6/22',
-      },
-      {
-        name: 'Sixth',
-        techStack: ['next', 'react', 'this'],
-        dateCompleted: '6/6/22',
-      },
-      {
-        name: 'Sixth',
-        techStack: ['next', 'react', 'this'],
-        dateCompleted: '6/6/22',
-      },
-      {
-        name: 'Sixth',
-        techStack: ['next', 'react', 'this'],
-        dateCompleted: '6/6/22',
-      },
-      {
-        name: 'Sixth',
-        techStack: ['next', 'react', 'this'],
-        dateCompleted: '6/6/22',
-      },
-      {
-        name: 'Sixth',
-        techStack: ['next', 'react', 'this'],
-        dateCompleted: '6/6/22',
-      },
-      {
-        name: 'Sixth',
-        techStack: ['next', 'react', 'this'],
-        dateCompleted: '6/6/22',
-      },
-      {
-        name: 'Sixth',
-        techStack: ['next', 'react', 'this'],
-        dateCompleted: '6/6/22',
-      },
-      {
-        name: 'Sixth',
-        techStack: ['next', 'react', 'this'],
-        dateCompleted: '6/6/22',
-      },
-      {
-        name: 'Sixth',
-        techStack: ['next', 'react', 'this'],
-        dateCompleted: '6/6/22',
-      },
-      {
-        name: 'Sixth',
-        techStack: ['next', 'react', 'this'],
-        dateCompleted: '6/6/22',
+        name: 'An Actual Excel App',
+        dataCompleted: '8/5/22',
+        link: '',
       },
     ];
 
-    let techMap = {};
-
+    // this creates the projects onto the ABOUT ME page on projects
     for (let i = 0; i < projectsArray.length; i++) {
       const p = projectsArray[i];
 
@@ -392,83 +486,45 @@
 
       projectsContainer.innerHTML += elements;
 
-      const techStack = p.techStack;
+      const knowCount = document.getElementById('knowledgeable-counter');
+      const profCount = document.getElementById('proficient-counter');
 
-      for (let j = 0; j < techStack.length; j++) {
-        const curVal = techStack[j];
+      //the list of my techstack from my resume displayed on the counter
 
-        if (techMap[curVal]) techMap[curVal] = techMap[curVal] + 1;
-        else techMap[curVal] = 1;
-      }
-    }
-    const projectCount = document.getElementById('project-counter');
-    const knowCount = document.getElementById('knowledgeable-counter');
-    const profCount = document.getElementById('proficient-counter');
-
-    projectCount.setAttribute(
-      'data-purecounter-end',
-      `${projectsArray.length}`
-    );
-    knowCount.setAttribute('data-purecounter-end', `${knowledgeable.length}`);
-    profCount.setAttribute('data-purecounter-end', `${proficient.length}`);
-
-    const sortedMap = Object.entries(techMap).sort((a, b) => b[1] - a[1]);
-    techMap = {};
-
-    for (let k = 0; k < sortedMap.length; k++) {
-      const curVal = sortedMap[k];
-      techMap[curVal[0]] = curVal[1];
+      knowCount.setAttribute('data-purecounter-end', `${knowledgeable.length}`);
+      profCount.setAttribute('data-purecounter-end', `${proficient.length}`);
     }
 
-    //progressBars
-    let counter = 0;
-    for (let key in techMap) {
-      const progressBars = `<div class=progress>
-      <span class=skill>${key}<i class=val># Projects Skill Used: ${
-        techMap[key]
-      }
-      </i></span>
-      <div class=progress-bar-wrap>
-        <div class=progress-bar role=progressbar aria-valuenow=${
-          (techMap[key] / projectsArray.length) * 100
+    const coll = document.getElementsByClassName('collapsible');
+    const video = document.getElementById('google-sheets-video');
+
+    //adding an event listener to allow for auto start and pause when the collapsible div is opened or closed
+    for (let i = 0; i < coll.length; i++) {
+      coll[i].addEventListener('click', function () {
+        this.classList.toggle('active');
+        const content = this.nextElementSibling;
+        if (content.style.display === 'block') {
+          content.style.display = 'none';
+          coll[i].innerText = 'Open Video';
+          video.contentWindow.postMessage(
+            '{"event":"command","func":"' + 'pauseVideo' + '","args":""}',
+            '*'
+          );
+        } else {
+          coll[i].innerText = 'Close Video';
+          content.style.display = 'block';
+          video.contentWindow.postMessage(
+            '{"event":"command","func":"' + 'playVideo' + '","args":""}',
+            '*'
+          );
         }
-         aria-valuemin=0 aria-valuemax=${projectsArray.length}></div>
-      </div>
-    </div>`;
-
-      counter++;
-
-      if (counter <= (knowledgeable.length + proficient.length) / 2) {
-        progressBarContainer1.innerHTML += progressBars;
-      } else progressBarContainer2.innerHTML += progressBars;
+      });
     }
-  }
-
-  const coll = document.getElementsByClassName('collapsible');
-  const video = document.getElementById('google-sheets-video');
-
-  for (let i = 0; i < coll.length; i++) {
-    coll[i].addEventListener('click', function () {
-      this.classList.toggle('active');
-      const content = this.nextElementSibling;
-      if (content.style.display === 'block') {
-        content.style.display = 'none';
-        coll[i].innerText = 'Open Video';
-        video.contentWindow.postMessage(
-          '{"event":"command","func":"' + 'pauseVideo' + '","args":""}',
-          '*'
-        );
-      } else {
-        coll[i].innerText = 'Close Video';
-        content.style.display = 'block';
-        video.contentWindow.postMessage(
-          '{"event":"command","func":"' + 'playVideo' + '","args":""}',
-          '*'
-        );
-      }
-    });
   }
   createProjects();
+  requestUserData();
+  requestUserRepos();
+  getOrginizations();
   /**
    * Initiate Pure Counter
    */
