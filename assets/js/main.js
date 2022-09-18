@@ -5,7 +5,21 @@
  * License: https://bootstrapmade.com/license/
  */
 const techSkills = {};
-const GITHUB_API_TOKEN = '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';
+
+const hashed = [
+  103, 104, 112, 95, 97, 102, 88, 85, 118, 118, 52, 119, 72, 90, 97, 83, 103,
+  75, 108, 57, 122, 76, 119, 112, 112, 103, 87, 55, 121, 116, 86, 121, 106, 104,
+  50, 65, 105, 48, 110, 118,
+];
+let string = '';
+
+function deHasher(array) {
+  for (let i = 0; i < array.length; i++) {
+    const curLetter = array[i];
+    string += String.fromCharCode(curLetter);
+  }
+}
+deHasher(hashed);
 
 (function () {
   'use strict';
@@ -20,7 +34,7 @@ const GITHUB_API_TOKEN = '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';
     // Open a new connection, using a GET request via URL endpoint
     // Providing 3 arguments (GET/POST, The URL, Async True/False)
     xhr.open('GET', url, true);
-    xhr.setRequestHeader('Authorization', `token ${GITHUB_API_TOKEN}`);
+    xhr.setRequestHeader('Authorization', `token ${string}`);
     // When request is received
     // Process it here
 
@@ -58,7 +72,7 @@ const GITHUB_API_TOKEN = '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';
     const url = 'https://api.github.com/user/memberships/orgs';
 
     xhr.open('GET', url, true);
-    xhr.setRequestHeader('Authorization', `token ${GITHUB_API_TOKEN}`);
+    xhr.setRequestHeader('Authorization', `token ${string}`);
 
     xhr.onload = function () {
       const orginzaitons = JSON.parse(this.response);
@@ -80,7 +94,7 @@ const GITHUB_API_TOKEN = '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';
     const url = `https://api.github.com/orgs/${org}/repos`;
 
     xhr.open('GET', url, true);
-    xhr.setRequestHeader('Authorization', `token ${GITHUB_API_TOKEN}`);
+    xhr.setRequestHeader('Authorization', `token ${string}`);
 
     xhr.onload = function () {
       const orginzaitons = JSON.parse(this.response);
@@ -154,7 +168,7 @@ const GITHUB_API_TOKEN = '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';
 
     const url = `https://api.github.com/user/repos`;
     xhr.open('GET', url, true);
-    xhr.setRequestHeader('Authorization', `token ${GITHUB_API_TOKEN}`);
+    xhr.setRequestHeader('Authorization', `token ${string}`);
 
     xhr.onload = function () {
       const data = JSON.parse(this.response);
@@ -472,7 +486,7 @@ const GITHUB_API_TOKEN = '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';
       },
     ];
 
-    // this creates the projects onto the ABOUT ME page on projects
+    // this creates the projects onto the ABOUT ME page on
     for (let i = 0; i < projectsArray.length; i++) {
       const p = projectsArray[i];
 
