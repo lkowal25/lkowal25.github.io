@@ -1200,6 +1200,12 @@ section .container {
   color: white;
 }
 
+@media (max-width: 992px) {
+  .video-container {
+    max-width: 100%;
+  }
+}
+
 /* Style the collapsible content. Note: hidden by default */
 .content {
   padding: 0 18px;
@@ -1209,6 +1215,26 @@ section .container {
   height: 300px;
   width: 400px;
 }
+
+.modal-dialog {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  max-width: none;
+}
+
+.modal-content {
+  height: auto;
+  height: 100vh;
+  border-radius: 0;
+  border: none;
+}
+
+.modal-body {
+  overflow-y: auto;
+}
+
 @-webkit-keyframes animate-loading {
   0% {
     transform: rotate(0deg);

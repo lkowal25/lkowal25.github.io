@@ -164,6 +164,7 @@ deHasher(hashed);
   }
 
   function requestUserRepos() {
+    const portfolioContainer = document.getElementById('portfolio-container');
     const xhr = new XMLHttpRequest();
 
     const url = `https://api.github.com/user/repos`;
@@ -178,8 +179,23 @@ deHasher(hashed);
           name,
           owner: { login },
           language,
+          description,
         } = data[i];
 
+        const html = `  <div class="col-lg-4 col-md-6 portfolio-item filter-github">
+        <div class="portfolio-wrap">
+          <img src="assets/img/portfolio/GitHubPic.jpeg" class="img-fluid" alt="">
+          <div class="portfolio-info">
+            <h4>${name}</h4>
+            <p>${login}</p>
+            <p>${!language ? '' : language}</p>
+            <div class="portfolio-links">
+              <a target=_blank href="https://github.com/${login}/${name}" data-gallery="portfolioGallery" class="portfolio-lightbox" title="App 2"><i class="bx bx-link"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>`;
+        portfolioContainer.innerHTML += html;
         getPackageJSON(login, name);
       }
     };
@@ -438,6 +454,7 @@ deHasher(hashed);
     },
   });
   function createProjects() {
+    const portfolioContainer = document.getElementById('portfolio-container');
     const projectsContainer =
       document.getElementsByClassName('projects-container')[0];
 
@@ -468,21 +485,32 @@ deHasher(hashed);
       'React-bootstrap',
       'Python',
     ];
-    console.log('K L', knowledgeable.length);
+
     const projectsArray = [
       {
         name: 'Grace-Shopper',
         dateCompleted: '6/22/22',
+        link: 'https://urban-safari.herokuapp.com/home',
+        gitHub: 'https://github.com/FSA-GS-Team-Trekkies/Grace-Shopper-Project',
+        image: 'assets/img/portfolio/GraceShopper.png',
+        description: '',
       },
       {
         name: 'Hot-Kicks',
         dateCompleted: '6/21/22',
         link: 'https://hot-kicks.herokuapp.com/',
+        gitHub: 'https://github.com/fozzies-funhouse/primary_dev_environment',
+        image: 'assets/img/portfolio/HotKicks.png',
+        description:
+          'An interactive e-commerce site that uses React-Three Fiber to render 3D objects that customers can physically touch and rotate.  This allows customers to gain a retail-like experience in an online environment.',
       },
       {
         name: 'An Actual Excel App',
         dataCompleted: '8/5/22',
-        link: '',
+        link: 'https://www.youtube.com/watch?v=3zCXFRqBqbE',
+        gitHub: '',
+        image: 'assets/img/portfolio/YouTubeIcon.jpg',
+        description: '',
       },
     ];
 
@@ -498,8 +526,68 @@ deHasher(hashed);
       </div>
     </div>`;
 
-      projectsContainer.innerHTML += elements;
+      const portDetail = `<main id="main">
+      <!-- ======= Portfolio Details ======= -->
+      <div id="portfolio-details" class="portfolio-details">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-4 portfolio-info">
+              <h3>Project information</h3>
+              <ul>
+                <li><strong>Category</strong>: ${p.name}</li>
+                <li><strong>Client</strong>: ASU Company</li>
+                <li><strong>Project date</strong>: ${p.dateCompleted}</li>
+                <li>
+                  <strong>Project URL</strong>: <a href="${p.github}">Github Link</a>
+                </li>
+              </ul>
 
+              <p>
+                ${p.description}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Portfolio Details -->
+    </main>`;
+
+      const smallModal = `<div class="modal fade" id="myModal-${p.name}" role="dialog">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Modal Header</h4>
+          </div>
+          <div class="modal-body">
+          <div>
+            ${portDetail}
+            </div>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+          <div class="modal-footer">d
+
+          </div>
+        </div>
+      </div>
+    </div>`;
+
+      const portfolioHTML = ` <div class="col-lg-4 col-md-6 portfolio-item filter-web">
+    <div class="portfolio-wrap">
+      <img src="${p.image}" class="img-fluid" alt="">
+      <div class="portfolio-info">
+        <h4>${p.name}</h4>
+        <div class="portfolio-links">
+          <a target="_blank" href="${p.gitHub}" data-gallery="portfolioDetailsGallery" data-glightbox="type: external" class="portfolio-details-lightbox" title="GitHub Link"><i class="bx bx-link"></i></a>
+          <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal-${p.name}">Open Small Modal</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+      portfolioContainer.innerHTML += smallModal;
+      projectsContainer.innerHTML += elements;
+      portfolioContainer.innerHTML += portfolioHTML;
       const knowCount = document.getElementById('knowledgeable-counter');
       const profCount = document.getElementById('proficient-counter');
 
