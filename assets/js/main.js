@@ -5,7 +5,7 @@
  * License: https://bootstrapmade.com/license/
  */
 const techSkills = {};
-
+//could be a Map
 const hashed = [
   103, 104, 112, 95, 97, 102, 88, 85, 118, 118, 52, 119, 72, 90, 97, 83, 103,
   75, 108, 57, 122, 76, 119, 112, 112, 103, 87, 55, 121, 116, 86, 121, 106, 104,
@@ -111,12 +111,14 @@ deHasher(hashed);
 
     xhr.send();
   }
-  let newArr = [];
   let counter = 0;
   async function getPackageJSON(owner, repo) {
     const url = `https://raw.githubusercontent.com/${owner}/${repo}/master/package.json`;
 
-    const raw = await fetch(url).then((response) => response.json());
+    const raw = await fetch(url)
+      .then((response) => response.json())
+      .catch((err) => console.log(err));
+    if (!raw) return;
     const { dependencies, devDependencies } = raw;
     // console.log('DEP', dependencies, devDependencies);
     for (let tech in dependencies) {
@@ -126,7 +128,8 @@ deHasher(hashed);
       counter++;
     }
     //had to harcode
-    if (counter >= 301) createHTMLFromTechSkills(techSkills, counter);
+    // console.log('COUNTER', counter);
+    if (counter >= 341) createHTMLFromTechSkills(techSkills, counter);
   }
 
   function createHTMLFromTechSkills(techSkills, length) {
@@ -134,7 +137,7 @@ deHasher(hashed);
       document.getElementsByClassName('progress-bars-1')[0];
     const progressBarContainer2 =
       document.getElementsByClassName('progress-bars-2')[0];
-    let count = 0;
+
     let sortedTech = [];
     for (let key in techSkills) {
       sortedTech.push([key, techSkills[key]]);
@@ -155,15 +158,13 @@ deHasher(hashed);
         </div>
       </div>`;
 
-      count++;
-
-      if (count <= sortedTech.length / 2) {
+      if (i <= sortedTech.length / 2) {
         progressBarContainer1.innerHTML += progressBars;
       } else progressBarContainer2.innerHTML += progressBars;
     }
   }
 
-  function requestUserRepos() {
+  async function requestUserRepos() {
     const portfolioContainer = document.getElementById('portfolio-container');
     const xhr = new XMLHttpRequest();
 
@@ -195,14 +196,20 @@ deHasher(hashed);
           </div>
         </div>
       </div>`;
-        portfolioContainer.innerHTML += html;
+        let totalRepos = [];
+        totalRepos.push(html);
+        accumulateGitHubRepos(html);
         getPackageJSON(login, name);
       }
     };
 
     xhr.send();
   }
-
+  function accumulateGitHubRepos(html) {
+    let totalRepos = [];
+    totalRepos.push(html);
+    // console.log('HERE IS OUR REPOS', totalRepos);
+  }
   let skills = [];
 
   function deployedProjectsList() {
@@ -493,7 +500,8 @@ deHasher(hashed);
         link: 'https://urban-safari.herokuapp.com/home',
         gitHub: 'https://github.com/FSA-GS-Team-Trekkies/Grace-Shopper-Project',
         image: 'assets/img/portfolio/GraceShopper.png',
-        description: '',
+        description:
+          'Our first major group project.  A simple e-commerce site using JWT authentication and React-Bootstrap.  Sequelize + Express backend and React + Redux front end.',
       },
       {
         name: 'Hot-Kicks',
@@ -509,8 +517,9 @@ deHasher(hashed);
         dataCompleted: '8/5/22',
         link: 'https://www.youtube.com/watch?v=3zCXFRqBqbE',
         gitHub: '',
-        image: 'assets/img/portfolio/YouTubeIcon.jpg',
-        description: '',
+        image: 'assets/img/portfolio/YoutubeIcon(copy).jpg',
+        description:
+          'A weekly scheduler app that can upload my schedule into Google Calendar as well as clear it from the sheets and the calendar using App Script.  In addition, it can email me notifications of important events.',
       },
     ];
 
@@ -541,51 +550,49 @@ deHasher(hashed);
                   <strong>Project URL</strong>: <a href="${p.github}">Github Link</a>
                 </li>
               </ul>
-
               <p>
                 ${p.description}
               </p>
             </div>
           </div>
         </div>
+          </div>
       </div>
       <!-- End Portfolio Details -->
     </main>`;
 
-      const smallModal = `<div class="modal fade" id="myModal-${p.name}" role="dialog">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Modal Header</h4>
-          </div>
-          <div class="modal-body">
-          <div>
-            ${portDetail}
-            </div>
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
-          <div class="modal-footer">d
+      //   const smallModal = `<div class="modal fade" id="myModal-${p.name}" role="dialog">
+      //   <div class="modal-dialog modal-lg">
+      //     <div class="modal-content">
+      //       <div class="modal-header">
+      //         <button type="button" class="close" data-dismiss="modal">&times;</button>
+      //         <h4 class="modal-title">Modal Header</h4>
+      //       </div>
+      //       <div class="modal-body">
 
-          </div>
-        </div>
-      </div>
-    </div>`;
+      //         ${portDetail}
+      //     </div>
+      //   </div>
+      // </div>`;
 
       const portfolioHTML = ` <div class="col-lg-4 col-md-6 portfolio-item filter-web">
     <div class="portfolio-wrap">
-      <img src="${p.image}" class="img-fluid" alt="">
+      <img src="${p.image}" class="img-fluid" alt="" id="portfolio-image">
       <div class="portfolio-info">
         <h4>${p.name}</h4>
         <div class="portfolio-links">
-          <a target="_blank" href="${p.gitHub}" data-gallery="portfolioDetailsGallery" data-glightbox="type: external" class="portfolio-details-lightbox" title="GitHub Link"><i class="bx bx-link"></i></a>
-          <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal-${p.name}">Open Small Modal</button>
+          <a target="_blank" href="${
+            p.gitHub === '' ? p.link : p.gitHub
+          }" data-gallery="portfolioDetailsGallery" data-glightbox="type: external" class="portfolio-details-lightbox" title="GitHub Link"><i class="bx bx-link"></i></a>
+          <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal-${
+            p.name
+          }">Open Small Modal</button>
         </div>
       </div>
     </div>
   </div>`;
 
-      portfolioContainer.innerHTML += smallModal;
+      // portfolioContainer.innerHTML += smallModal;
       projectsContainer.innerHTML += elements;
       portfolioContainer.innerHTML += portfolioHTML;
       const knowCount = document.getElementById('knowledgeable-counter');
@@ -623,10 +630,10 @@ deHasher(hashed);
       });
     }
   }
-  createProjects();
   requestUserData();
   requestUserRepos();
   getOrginizations();
+  createProjects();
   /**
    * Initiate Pure Counter
    */
