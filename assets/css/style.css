@@ -1218,7 +1218,7 @@ section .container {
 
 .modal-dialog {
   width: 100vw;
-  height: 100vh;
+  height: 80vh;
   margin: 0;
   padding: 0;
   max-width: none;
@@ -1226,13 +1226,17 @@ section .container {
 
 .modal-content {
   height: auto;
-  height: 100vh;
+  height: 90vh;
   border-radius: 0;
   border: none;
 }
 
 .modal-body {
   overflow-y: auto;
+}
+
+.modal-backdrop {
+  z-index: -1;
 }
 
 @-webkit-keyframes animate-loading {

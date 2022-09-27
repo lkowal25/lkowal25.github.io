@@ -462,6 +462,7 @@ deHasher(hashed);
     const projectsContainer =
       document.getElementsByClassName('projects-container')[0];
 
+    let modalHTML = [];
     const proficient = [
       'Javascript (node.js)',
       'Excel',
@@ -555,22 +556,7 @@ deHasher(hashed);
         </div>
           </div>
       </div>
-      <!-- End Portfolio Details -->
     </main>`;
-
-      //   const smallModal = `<div class="modal fade" id="myModal-${p.name}" role="dialog">
-      //   <div class="modal-dialog modal-lg">
-      //     <div class="modal-content">
-      //       <div class="modal-header">
-      //         <button type="button" class="close" data-dismiss="modal">&times;</button>
-      //         <h4 class="modal-title">Modal Header</h4>
-      //       </div>
-      //       <div class="modal-body">
-
-      //         ${portDetail}
-      //     </div>
-      //   </div>
-      // </div>`;
 
       const portfolioHTML = ` <div class="col-lg-4 col-md-6 portfolio-item filter-web">
     <div class="portfolio-wrap">
@@ -581,15 +567,14 @@ deHasher(hashed);
           <a target="_blank" href="${
             p.gitHub === '' ? p.link : p.gitHub
           }" data-gallery="portfolioDetailsGallery" data-glightbox="type: external" class="portfolio-details-lightbox" title="GitHub Link"><i class="bx bx-link"></i></a>
-          <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal-${
+          <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" id="modal-${
             p.name
           }">Open Small Modal</button>
         </div>
       </div>
     </div>
   </div>`;
-
-      // portfolioContainer.innerHTML += smallModal;
+      modalHTML.push(portDetail);
       projectsContainer.innerHTML += elements;
       portfolioContainer.innerHTML += portfolioHTML;
       const knowCount = document.getElementById('knowledgeable-counter');
@@ -631,11 +616,26 @@ deHasher(hashed);
         }
       });
     }
+    addEventListenerToModal(modalHTML);
+  }
+  function addEventListenerToModal(modalHTML) {
+    const modalButtons = document.getElementsByClassName('btn btn-info btn-lg'),
+      modalContent = document.getElementById('modal-body'),
+      myModal = document.getElementById('myModal');
+
+    for (let i = 0; i < modalButtons.length; i++) {
+      const curButton = modalButtons[i],
+        curHTML = modalHTML[i];
+
+      curButton.addEventListener('click', function () {
+        modalContent.innerHTML = curHTML;
+      });
+    }
   }
   requestUserData();
   requestUserRepos();
   getOrginizations();
-  // createProjects();
+
   /**
    * Initiate Pure Counter
    */
