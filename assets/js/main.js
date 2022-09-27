@@ -499,7 +499,7 @@ deHasher(hashed);
         gitHub: 'https://github.com/FSA-GS-Team-Trekkies/Grace-Shopper-Project',
         image: 'assets/img/portfolio/GraceShopper.png',
         description:
-          'Our first major group project.  A simple e-commerce site using JWT authentication and React-Bootstrap.  Sequelize + Express backend and React + Redux front end.',
+          'Our first major group project.  A simple e-commerce site that uses JWT authentication and React-Bootstrap.  Sequelize + Express backend and React + Redux front end.',
       },
       {
         name: 'Hot-Kicks',
@@ -567,9 +567,9 @@ deHasher(hashed);
           <a target="_blank" href="${
             p.gitHub === '' ? p.link : p.gitHub
           }" data-gallery="portfolioDetailsGallery" data-glightbox="type: external" class="portfolio-details-lightbox" title="GitHub Link"><i class="bx bx-link"></i></a>
-          <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" id="modal-${
+          <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal" id="modal-${
             p.name
-          }">Open Small Modal</button>
+          }">Info: ${p.name}</button>
         </div>
       </div>
     </div>
@@ -619,7 +619,7 @@ deHasher(hashed);
     addEventListenerToModal(modalHTML);
   }
   function addEventListenerToModal(modalHTML) {
-    const modalButtons = document.getElementsByClassName('btn btn-info btn-lg'),
+    const modalButtons = document.getElementsByClassName('btn btn-info btn-sm'),
       modalContent = document.getElementById('modal-body'),
       myModal = document.getElementById('myModal');
 

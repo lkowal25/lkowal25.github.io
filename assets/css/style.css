@@ -1231,12 +1231,21 @@ section .container {
   border: none;
 }
 
-.modal-body {
-  overflow-y: auto;
-}
-
 .modal-backdrop {
   z-index: -1;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: center;
+  background-color: #333;
+}
+
+.modal-footer button {
+  width: 20%;
+  font-size: 20px;
+  font-weight: bold;
+  background-color: #18d26e;
 }
 
 @-webkit-keyframes animate-loading {
