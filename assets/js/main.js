@@ -5,6 +5,7 @@
  * License: https://bootstrapmade.com/license/
  */
 const techSkills = {};
+let totalRepos = [];
 //could be a Map
 const hashed = [
   103, 104, 112, 95, 97, 102, 88, 85, 118, 118, 52, 119, 72, 90, 97, 83, 103,
@@ -196,20 +197,16 @@ deHasher(hashed);
           </div>
         </div>
       </div>`;
-        let totalRepos = [];
+
         totalRepos.push(html);
-        accumulateGitHubRepos(html);
+        if (totalRepos.length === data.length) createProjects(totalRepos);
         getPackageJSON(login, name);
       }
     };
 
     xhr.send();
   }
-  function accumulateGitHubRepos(html) {
-    let totalRepos = [];
-    totalRepos.push(html);
-    // console.log('HERE IS OUR REPOS', totalRepos);
-  }
+
   let skills = [];
 
   function deployedProjectsList() {
@@ -460,7 +457,7 @@ deHasher(hashed);
       clickable: true,
     },
   });
-  function createProjects() {
+  function createProjects(reposArr) {
     const portfolioContainer = document.getElementById('portfolio-container');
     const projectsContainer =
       document.getElementsByClassName('projects-container')[0];
@@ -604,6 +601,11 @@ deHasher(hashed);
       profCount.setAttribute('data-purecounter-end', `${proficient.length}`);
     }
 
+    for (let j = 0; j < reposArr.length; j++) {
+      const curHTML = reposArr[j];
+      portfolioContainer.innerHTML += curHTML;
+    }
+
     const coll = document.getElementsByClassName('collapsible');
     const video = document.getElementById('google-sheets-video');
 
@@ -633,7 +635,7 @@ deHasher(hashed);
   requestUserData();
   requestUserRepos();
   getOrginizations();
-  createProjects();
+  // createProjects();
   /**
    * Initiate Pure Counter
    */
