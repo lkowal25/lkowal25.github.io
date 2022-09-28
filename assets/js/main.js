@@ -107,7 +107,7 @@ deHasher(hashed);
 
         if (stop && i === orginzaitons.length - 1) {
           await getPackageJSON(login, name, stop);
-        } else getPackageJSON(login, name);
+        } else await getPackageJSON(login, name);
       }
     };
 
@@ -136,14 +136,11 @@ deHasher(hashed);
       counter++;
     }
 
-    // console.log('USERSTOP', stop, 'orgStop', orgStop, 'counter', counter);
-    //had to harcode, used setInterval 2s
-
-    //MARKER: ONLY CHANGE ALONG WITH GET USER REPOS
     if (stop) {
       console.log('COUNTER', counter);
-      createHTMLFromTechSkills(techSkills, counter);
+      return createHTMLFromTechSkills(techSkills, counter);
     }
+    // console.log('TECH SKILLS', techSkills, 'COUNTER', counter, 'STOP', stop);
   }
 
   function createHTMLFromTechSkills(techSkills, length) {
