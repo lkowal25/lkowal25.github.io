@@ -1,9 +1,3 @@
-/**
- * Template Name: Personal - v4.8.1
- * Template URL: https://bootstrapmade.com/personal-free-resume-bootstrap-template/
- * Author: BootstrapMade.com
- * License: https://bootstrapmade.com/license/
- */
 let counter = 0;
 const techSkills = {};
 let totalRepos = [];
@@ -103,7 +97,7 @@ deHasher(hashed);
     xhr.open('GET', url, true);
     xhr.setRequestHeader('Authorization', `token ${string}`);
 
-    xhr.onload = function () {
+    xhr.onload = async function () {
       const orginzaitons = JSON.parse(this.response);
       for (let i = 0; i < orginzaitons.length; i++) {
         const {
@@ -112,7 +106,7 @@ deHasher(hashed);
         } = orginzaitons[i];
 
         if (stop && i === orginzaitons.length - 1) {
-          getPackageJSON(login, name, stop);
+          await getPackageJSON(login, name, stop);
         } else getPackageJSON(login, name);
       }
     };
