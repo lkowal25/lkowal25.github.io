@@ -34,9 +34,9 @@ deHasher(hashed);
     // When request is received
     // Process it here
 
-    xhr.onload = function () {
+    xhr.onload = async function () {
       // Parse API data into JSON
-      const data = JSON.parse(this.response);
+      const data = await JSON.parse(this.response);
 
       //set the total project count
       const projectCount = document.getElementById('project-counter');
@@ -69,8 +69,8 @@ deHasher(hashed);
     xhr.open('GET', url, true);
     xhr.setRequestHeader('Authorization', `token ${string}`);
 
-    xhr.onload = function () {
-      const orginzaitons = JSON.parse(this.response);
+    xhr.onload = async function () {
+      const orginzaitons = await JSON.parse(this.response);
 
       for (let i = 0; i < orginzaitons.length; i++) {
         const {
@@ -98,7 +98,7 @@ deHasher(hashed);
     xhr.setRequestHeader('Authorization', `token ${string}`);
 
     xhr.onload = async function () {
-      const orginzaitons = JSON.parse(this.response);
+      const orginzaitons = await JSON.parse(this.response);
       for (let i = 0; i < orginzaitons.length; i++) {
         const {
           name,
@@ -185,8 +185,8 @@ deHasher(hashed);
     xhr.open('GET', url, true);
     xhr.setRequestHeader('Authorization', `token ${string}`);
 
-    xhr.onload = function () {
-      const data = JSON.parse(this.response);
+    xhr.onload = async function () {
+      const data = await JSON.parse(this.response);
 
       for (let i = 0; i < data.length; i++) {
         const {
@@ -665,7 +665,7 @@ deHasher(hashed);
     await requestUserRepos();
     await requestUserData();
     //need this function to run last
-    setTimeout(5000);
+    // setTimeout(5000);
     await getOrginizations();
   }
   orderFinalFunx();
