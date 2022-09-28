@@ -222,7 +222,7 @@ deHasher(hashed);
         ];
 
         if (excluded.includes(name)) continue;
-        if (i === data.length - 1) getPackageJSON(login, name);
+        if (i === data.length - 1) await getPackageJSON(login, name);
         else getPackageJSON(login, name);
       }
     };
