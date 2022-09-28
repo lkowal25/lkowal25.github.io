@@ -4,6 +4,7 @@
  * Author: BootstrapMade.com
  * License: https://bootstrapmade.com/license/
  */
+let counter = 0;
 const techSkills = {};
 let totalRepos = [];
 //could be a Map
@@ -42,7 +43,6 @@ deHasher(hashed);
     xhr.onload = function () {
       // Parse API data into JSON
       const data = JSON.parse(this.response);
-      // console.log('DATA ARRAY', data);
 
       //set the total project count
       const projectCount = document.getElementById('project-counter');
@@ -68,7 +68,7 @@ deHasher(hashed);
     xhr.send();
   }
 
-  function getOrginizations() {
+  async function getOrginizations() {
     const xhr = new XMLHttpRequest();
     const url = 'https://api.github.com/user/memberships/orgs';
 
@@ -77,20 +77,26 @@ deHasher(hashed);
 
     xhr.onload = function () {
       const orginzaitons = JSON.parse(this.response);
-      // console.log('HERE ARE THE ORGS', orginzaitons);
+
       for (let i = 0; i < orginzaitons.length; i++) {
         const {
           organization: { login },
         } = orginzaitons[i];
-        if (login === 'FullstackAcademy') continue;
-        getOrginizationRepos(login);
+        if (login === 'FullstackAcademy') {
+          if (i === orginzaitons.length - 1) orgStop = true;
+          continue;
+        }
+        if (i === orginzaitons.length - 1) {
+          const stop = true;
+          getOrginizationRepos(login, stop);
+        } else getOrginizationRepos(login);
       }
     };
 
     xhr.send();
   }
 
-  function getOrginizationRepos(org) {
+  function getOrginizationRepos(org, stop = false) {
     const xhr = new XMLHttpRequest();
     const url = `https://api.github.com/orgs/${org}/repos`;
 
@@ -99,38 +105,48 @@ deHasher(hashed);
 
     xhr.onload = function () {
       const orginzaitons = JSON.parse(this.response);
-      // console.log('HERE ARE THE ORGS', orginzaitons);
       for (let i = 0; i < orginzaitons.length; i++) {
         const {
           name,
           owner: { login },
         } = orginzaitons[i];
 
-        return getPackageJSON(login, name);
+        if (stop && i === orginzaitons.length - 1) {
+          getPackageJSON(login, name, stop);
+        } else getPackageJSON(login, name);
       }
     };
 
     xhr.send();
   }
-  let counter = 0;
-  async function getPackageJSON(owner, repo) {
-    const url = `https://raw.githubusercontent.com/${owner}/${repo}/master/package.json`;
 
+  async function getPackageJSON(owner, repo, stop = false) {
+    const url = `https://raw.githubusercontent.com/${owner}/${repo}/master/package.json`;
     const raw = await fetch(url)
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 404) throw new Error('No Package JSON');
+        else return response.json();
+      })
       .catch((err) => console.log(err));
     if (!raw) return;
     const { dependencies, devDependencies } = raw;
-    // console.log('DEP', dependencies, devDependencies);
     for (let tech in dependencies) {
-      // console.log('TECH', tech);
       if (techSkills[tech]) techSkills[tech] += 1;
       else techSkills[tech] = 1;
       counter++;
     }
-    //had to harcode
-    // console.log('COUNTER', counter);
-    if (counter >= 341) createHTMLFromTechSkills(techSkills, counter);
+
+    for (let tech in devDependencies) {
+      if (techSkills[tech]) techSkills[tech] += 1;
+      else techSkills[tech] = 1;
+      counter++;
+    }
+
+    // console.log('USERSTOP', stop, 'orgStop', orgStop, 'counter', counter);
+    //had to harcode, used setInterval 2s
+
+    //MARKER: ONLY CHANGE ALONG WITH GET USER REPOS
+    if (stop) createHTMLFromTechSkills(techSkills, counter);
   }
 
   function createHTMLFromTechSkills(techSkills, length) {
@@ -165,11 +181,10 @@ deHasher(hashed);
     }
   }
 
-  async function requestUserRepos() {
-    const portfolioContainer = document.getElementById('portfolio-container');
+  function requestUserRepos() {
     const xhr = new XMLHttpRequest();
-
     const url = `https://api.github.com/user/repos`;
+
     xhr.open('GET', url, true);
     xhr.setRequestHeader('Authorization', `token ${string}`);
 
@@ -197,21 +212,30 @@ deHasher(hashed);
           </div>
         </div>
       </div>`;
-
+        //MARKER: THIS IS THE ONLY CHANGE along with GET PACKAGE JSON
         totalRepos.push(html);
         if (totalRepos.length === data.length) createProjects(totalRepos);
-        getPackageJSON(login, name);
+
+        const excluded = [
+          'Quick_Game1',
+          'TEST-PM',
+          'nodeWorkShop',
+          'lkowal25.github.io',
+          'Lab.Practicing-Git',
+          'fsaNodeShell',
+          'search-and-destroy',
+          'threeJS',
+        ];
+
+        if (excluded.includes(name)) continue;
+        if (i === data.length - 1) getPackageJSON(login, name);
+        else getPackageJSON(login, name);
       }
     };
 
     xhr.send();
   }
 
-  let skills = [];
-
-  function deployedProjectsList() {
-    const deployed = [['Hot-Kicks', '']];
-  }
   /**
    * Easy selector helper function
    */
@@ -496,7 +520,7 @@ deHasher(hashed);
         name: 'Grace-Shopper',
         dateCompleted: '6/22/22',
         link: 'https://urban-safari.herokuapp.com/home',
-        gitHub: 'https://github.com/FSA-GS-Team-Trekkies/Grace-Shopper-Project',
+        gitHub: 'https://github.com/lkowal25/Grace-Shopper-Project',
         image: 'assets/img/portfolio/GraceShopper.png',
         description:
           'Our first major group project.  A simple e-commerce site that uses JWT authentication and React-Bootstrap.  Sequelize + Express backend and React + Redux front end.',
@@ -532,7 +556,7 @@ deHasher(hashed);
           <h3>${p.name}</h3>
       </div>
     </div>`;
-
+      //this is the detail inside the modal
       const portDetail = `<main id="main">
       <!-- ======= Portfolio Details ======= -->
       <div id="portfolio-details" class="portfolio-details">
@@ -542,11 +566,19 @@ deHasher(hashed);
               <h3>Project information</h3>
               <ul>
                 <li><strong>Category</strong>: ${p.name}</li>
-                <li><strong>Client</strong>: ASU Company</li>
                 <li><strong>Project date</strong>: ${p.dateCompleted}</li>
                 <li>
-                  <strong>Project URL</strong>: <a href="${p.github}">Github Link</a>
+                  <strong>GitHub URL</strong>: <a  target="_blank" href="${
+                    p.github === '' ? p.link : p.gitHub
+                  }
+                  }">Github Link</a>
                 </li>
+                <li>
+                <strong>Project URL</strong>: <a  target="_blank" href="${
+                  p.link === '' ? p.gitHub : p.link
+                }
+                }">Deployed Link</a>
+              </li>
               </ul>
               <p>
                 ${p.description}
@@ -632,9 +664,14 @@ deHasher(hashed);
       });
     }
   }
-  requestUserData();
-  requestUserRepos();
-  getOrginizations();
+  async function orderFinalFunx() {
+    requestUserRepos();
+    requestUserData();
+    //need this function to run last
+    setTimeout(2000);
+    await getOrginizations();
+  }
+  orderFinalFunx();
 
   /**
    * Initiate Pure Counter
