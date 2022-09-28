@@ -26,7 +26,7 @@ deHasher(hashed);
 (function () {
   'use strict';
 
-  function requestUserData() {
+  async function requestUserData() {
     // Create new XMLHttpRequest object
     const xhr = new XMLHttpRequest();
 
@@ -146,7 +146,10 @@ deHasher(hashed);
     //had to harcode, used setInterval 2s
 
     //MARKER: ONLY CHANGE ALONG WITH GET USER REPOS
-    if (stop) createHTMLFromTechSkills(techSkills, counter);
+    if (stop) {
+      console.log('COUNTER', counter);
+      createHTMLFromTechSkills(techSkills, counter);
+    }
   }
 
   function createHTMLFromTechSkills(techSkills, length) {
@@ -181,7 +184,7 @@ deHasher(hashed);
     }
   }
 
-  function requestUserRepos() {
+  async function requestUserRepos() {
     const xhr = new XMLHttpRequest();
     const url = `https://api.github.com/user/repos`;
 
@@ -212,7 +215,7 @@ deHasher(hashed);
           </div>
         </div>
       </div>`;
-        //MARKER: THIS IS THE ONLY CHANGE along with GET PACKAGE JSON
+
         totalRepos.push(html);
         if (totalRepos.length === data.length) createProjects(totalRepos);
 
@@ -665,10 +668,10 @@ deHasher(hashed);
     }
   }
   async function orderFinalFunx() {
-    requestUserRepos();
-    requestUserData();
+    await requestUserRepos();
+    await requestUserData();
     //need this function to run last
-    setTimeout(2000);
+    setTimeout(4000);
     await getOrginizations();
   }
   orderFinalFunx();
