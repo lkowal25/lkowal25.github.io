@@ -665,7 +665,7 @@ deHasher(hashed);
     await requestUserRepos();
     await requestUserData();
     //need this function to run last
-    setTimeout(4000);
+    setTimeout(5000);
     await getOrginizations();
   }
   orderFinalFunx();
