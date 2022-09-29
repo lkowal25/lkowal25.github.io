@@ -59,7 +59,7 @@ deHasher(hashed);
       //3. Inside that API call do a for loop to call the contents
     };
     // Send the request to the server
-    cbFx();
+    await cbFx().then(getOrginizations());
     xhr.send();
   }
 
@@ -660,7 +660,7 @@ deHasher(hashed);
     }
   }
 
-  requestUserRepos(requestUserData(getOrginizations));
+  requestUserData(requestUserRepos);
   /**
    * Initiate Pure Counter
    */
