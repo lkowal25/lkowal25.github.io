@@ -1,4 +1,6 @@
 let counter = 0;
+let orgStop = false,
+  userStop = false;
 const techSkills = {};
 let totalRepos = [];
 //could be a Map
@@ -83,7 +85,7 @@ deHasher(hashed);
         }
         if (i === orginzaitons.length - 1) {
           const stop = true;
-          setTimeout(getOrginizationRepos(login, stop), 2000);
+          getOrginizationRepos(login, stop);
         } else getOrginizationRepos(login);
       }
     };
@@ -138,7 +140,11 @@ deHasher(hashed);
     }
 
     if (stop) {
-      console.log('COUNTER', counter);
+      orgStop = true;
+    }
+
+    if (orgStop && userStop) {
+      console.log('COUNTER AT END', counter);
       return createHTMLFromTechSkills(techSkills, counter);
     }
     // console.log('TECH SKILLS', techSkills, 'COUNTER', counter, 'STOP', stop);
@@ -176,7 +182,7 @@ deHasher(hashed);
     }
   }
 
-  async function requestUserRepos(cbFx) {
+  async function requestUserRepos() {
     const xhr = new XMLHttpRequest();
     const url = `https://api.github.com/user/repos`;
 
@@ -222,9 +228,16 @@ deHasher(hashed);
           'threeJS',
         ];
 
-        if (excluded.includes(name)) continue;
-        if (i === data.length - 1) await getPackageJSON(login, name);
-        else getPackageJSON(login, name);
+        if (excluded.includes(name)) {
+          if (i === data.length - 1) {
+            userStop = true;
+            continue;
+          } else continue;
+        }
+        if (i === data.length - 1) {
+          userStop = true;
+          await getPackageJSON(login, name);
+        } else getPackageJSON(login, name);
       }
     };
 
@@ -661,14 +674,9 @@ deHasher(hashed);
   }
 
   requestUserData(requestUserRepos);
+
   /**
    * Initiate Pure Counter
    */
   new PureCounter();
 })();
-function reload() {
-  let c = 0;
-  if (c === 1) return location.reload();
-  c++;
-}
-reload();
