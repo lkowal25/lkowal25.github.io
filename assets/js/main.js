@@ -680,4 +680,4 @@ setTimeout(function () {
    */
   new PureCounter();
 })(),
-  1000;
+  100;
