@@ -19,7 +19,7 @@ function deHasher(array) {
 }
 deHasher(hashed);
 
-setTimeout(function () {
+(function () {
   'use strict';
 
   async function requestUserData(cbFx) {
@@ -144,7 +144,7 @@ setTimeout(function () {
     }
 
     if (orgStop && userStop) {
-      console.log('COUNTER AT END', counter);
+      console.log('COUNTER END', counter);
       return createHTMLFromTechSkills(techSkills, counter);
     }
     // console.log('TECH SKILLS', techSkills, 'COUNTER', counter, 'STOP', stop);
@@ -679,5 +679,4 @@ setTimeout(function () {
    * Initiate Pure Counter
    */
   new PureCounter();
-})(),
-  100;
+})();
