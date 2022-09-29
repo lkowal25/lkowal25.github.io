@@ -659,15 +659,14 @@ deHasher(hashed);
       });
     }
   }
-  async function orderFinalFunx() {
-    requestUserRepos(requestUserData(getOrginizations));
-    // requestUserData();
-    //need this function to run last
-    setTimeout(2000);
-    // getOrginizations();
-  }
-  orderFinalFunx();
-
+  // async function orderFinalFunx() {
+  // requestUserRepos(requestUserData(getOrginizations));
+  //   // requestUserData();
+  //   //need this function to run last
+  //   // getOrginizations();
+  // }
+  // orderFinalFunx();
+  requestUserRepos(requestUserData(getOrginizations));
   /**
    * Initiate Pure Counter
    */
