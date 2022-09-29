@@ -20,7 +20,7 @@ deHasher(hashed);
 (function () {
   'use strict';
 
-  async function requestUserData() {
+  async function requestUserData(cbFx) {
     // Create new XMLHttpRequest object
     const xhr = new XMLHttpRequest();
 
@@ -59,6 +59,7 @@ deHasher(hashed);
       //3. Inside that API call do a for loop to call the contents
     };
     // Send the request to the server
+    cbFx();
     xhr.send();
   }
 
@@ -175,7 +176,7 @@ deHasher(hashed);
     }
   }
 
-  async function requestUserRepos() {
+  async function requestUserRepos(cbFx) {
     const xhr = new XMLHttpRequest();
     const url = `https://api.github.com/user/repos`;
 
@@ -659,11 +660,11 @@ deHasher(hashed);
     }
   }
   async function orderFinalFunx() {
-    await requestUserRepos();
-    await requestUserData();
+    requestUserRepos(requestUserData(getOrginizations));
+    // requestUserData();
     //need this function to run last
     setTimeout(2000);
-    await getOrginizations();
+    // getOrginizations();
   }
   orderFinalFunx();
 
