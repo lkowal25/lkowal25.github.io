@@ -19,7 +19,7 @@ function deHasher(array) {
 }
 deHasher(hashed);
 
-(function () {
+setTimeout(function () {
   'use strict';
 
   async function requestUserData(cbFx) {
@@ -679,4 +679,5 @@ deHasher(hashed);
    * Initiate Pure Counter
    */
   new PureCounter();
-})();
+})(),
+  1000;
