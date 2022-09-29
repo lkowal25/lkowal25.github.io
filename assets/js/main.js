@@ -666,3 +666,9 @@ deHasher(hashed);
    */
   new PureCounter();
 })();
+function reload() {
+  let c = 0;
+  if (c === 1) return location.reload();
+  c++;
+}
+reload();
