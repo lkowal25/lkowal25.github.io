@@ -83,7 +83,7 @@ deHasher(hashed);
         }
         if (i === orginzaitons.length - 1) {
           const stop = true;
-          getOrginizationRepos(login, stop);
+          setTimeout(getOrginizationRepos(login, stop), 2000);
         } else getOrginizationRepos(login);
       }
     };
@@ -659,13 +659,7 @@ deHasher(hashed);
       });
     }
   }
-  // async function orderFinalFunx() {
-  // requestUserRepos(requestUserData(getOrginizations));
-  //   // requestUserData();
-  //   //need this function to run last
-  //   // getOrginizations();
-  // }
-  // orderFinalFunx();
+
   requestUserRepos(requestUserData(getOrginizations));
   /**
    * Initiate Pure Counter
