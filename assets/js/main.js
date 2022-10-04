@@ -62,7 +62,7 @@ deHasher(hashed);
     };
     // Send the request to the server
     console.log('Should hit ONE TIME ');
-    await cbFx().then(getOrginizations());
+    cbFx().then(await getOrginizations());
     xhr.send();
   }
 
@@ -75,11 +75,12 @@ deHasher(hashed);
 
     xhr.onload = async function () {
       const orginzaitons = await JSON.parse(this.response);
-
+      // console.log('LOOKING FOR GS + STACK', orginzaitons);
       for (let i = 0; i < orginzaitons.length; i++) {
         const {
           organization: { login },
         } = orginzaitons[i];
+
         if (login === 'FullstackAcademy') {
           if (i === orginzaitons.length - 1) orgStop = true;
           continue;
@@ -111,7 +112,7 @@ deHasher(hashed);
 
         if (stop && i === orginzaitons.length - 1) {
           await getPackageJSON(login, name, stop);
-        } else await getPackageJSON(login, name);
+        } else getPackageJSON(login, name);
       }
     };
 
@@ -191,10 +192,8 @@ deHasher(hashed);
 
     xhr.open('GET', url, true);
     xhr.setRequestHeader('Authorization', `token ${string}`);
-
     xhr.onload = async function () {
       const data = await JSON.parse(this.response);
-
       for (let i = 0; i < data.length; i++) {
         const {
           name,
