@@ -61,7 +61,8 @@ deHasher(hashed);
       //3. Inside that API call do a for loop to call the contents
     };
     // Send the request to the server
-    await cbFx().then(getOrginizations());
+    console.log('ONE TIME ');
+    cbFx().then(getOrginizations());
     xhr.send();
   }
 
