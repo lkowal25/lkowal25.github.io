@@ -61,7 +61,7 @@ deHasher(hashed);
       //3. Inside that API call do a for loop to call the contents
     };
     // Send the request to the server
-    console.log('ONE TIME ');
+    console.log('Should hit ONE TIME ');
     await cbFx().then(getOrginizations());
     xhr.send();
   }
@@ -86,15 +86,15 @@ deHasher(hashed);
         }
         if (i === orginzaitons.length - 1) {
           const stop = true;
-          getOrginizationRepos(login, stop);
-        } else getOrginizationRepos(login);
+          await getOrginizationRepos(login, stop);
+        } else await getOrginizationRepos(login);
       }
     };
 
     xhr.send();
   }
 
-  function getOrginizationRepos(org, stop = false) {
+  async function getOrginizationRepos(org, stop = false) {
     const xhr = new XMLHttpRequest();
     const url = `https://api.github.com/orgs/${org}/repos`;
 
