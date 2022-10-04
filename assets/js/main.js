@@ -62,7 +62,7 @@ deHasher(hashed);
     };
     // Send the request to the server
     console.log('ONE TIME ');
-    cbFx().then(getOrginizations());
+    await cbFx().then(getOrginizations());
     xhr.send();
   }
 
@@ -146,6 +146,8 @@ deHasher(hashed);
 
     if (orgStop && userStop) {
       console.log('COUNTER END', counter);
+      orgStop = false;
+      userStop = false;
       return createHTMLFromTechSkills(techSkills, counter);
     }
     // console.log('TECH SKILLS', techSkills, 'COUNTER', counter, 'STOP', stop);
