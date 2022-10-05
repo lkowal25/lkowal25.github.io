@@ -110,8 +110,8 @@ deHasher(hashed);
         } = orginzaitons[i];
 
         if (stop && i === orginzaitons.length - 1) {
-          await getPackageJSON(login, name, stop);
-        } else await getPackageJSON(login, name);
+          getPackageJSON(login, name, stop);
+        } else getPackageJSON(login, name);
       }
     };
 
@@ -130,7 +130,6 @@ deHasher(hashed);
     if (!raw) {
       return;
     }
-
     const { dependencies, devDependencies } = raw;
     for (let tech in dependencies) {
       if (techSkills[tech]) techSkills[tech] += 1;
@@ -241,8 +240,8 @@ deHasher(hashed);
         }
         if (i === data.length - 1) {
           userStop = true;
-          await getPackageJSON(login, name);
-        } else await getPackageJSON(login, name);
+          getPackageJSON(login, name);
+        } else getPackageJSON(login, name);
       }
     };
 
