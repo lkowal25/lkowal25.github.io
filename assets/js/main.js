@@ -111,13 +111,13 @@ deHasher(hashed);
 
         if (stop && i === orginzaitons.length - 1) {
           getPackageJSON(login, name, stop);
-        } else getPackageJSON(login, name);
+        } else Promise.all(getPackageJSON(login, name));
       }
     };
 
     xhr.send();
   }
-
+  let temp = 0;
   async function getPackageJSON(owner, repo, stop = false) {
     const url = `https://raw.githubusercontent.com/${owner}/${repo}/master/package.json`;
     const raw = await fetch(url)
@@ -130,6 +130,7 @@ deHasher(hashed);
     if (!raw) {
       return;
     }
+
     const { dependencies, devDependencies } = raw;
     for (let tech in dependencies) {
       if (techSkills[tech]) techSkills[tech] += 1;
@@ -151,6 +152,7 @@ deHasher(hashed);
       console.log('COUNTER END', counter);
       orgStop = false;
       userStop = false;
+      //remove temp? remove return?
       return createHTMLFromTechSkills(techSkills, counter);
     }
     // console.log('TECH SKILLS', techSkills, 'COUNTER', counter, 'STOP', stop);
@@ -241,7 +243,7 @@ deHasher(hashed);
         if (i === data.length - 1) {
           userStop = true;
           getPackageJSON(login, name);
-        } else getPackageJSON(login, name);
+        } else Promise.allSettled(getPackageJSON(login, name));
       }
     };
 
