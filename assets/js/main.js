@@ -150,9 +150,10 @@ deHasher(hashed);
 
     if (orgStop && userStop) {
       console.log('COUNTER END', counter);
-      orgStop = false;
-      userStop = false;
-      //remove temp? remove return?
+      // orgStop = false;
+      // userStop = false;
+      temp += 1;
+      if (temp > 1) document.location.reload();
       return createHTMLFromTechSkills(techSkills, counter);
     }
     // console.log('TECH SKILLS', techSkills, 'COUNTER', counter, 'STOP', stop);
