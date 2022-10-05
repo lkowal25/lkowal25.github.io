@@ -111,7 +111,7 @@ deHasher(hashed);
 
         if (stop && i === orginzaitons.length - 1) {
           getPackageJSON(login, name, stop);
-        } else Promise.all(getPackageJSON(login, name));
+        } else getPackageJSON(login, name);
       }
     };
 
@@ -244,7 +244,7 @@ deHasher(hashed);
         if (i === data.length - 1) {
           userStop = true;
           getPackageJSON(login, name);
-        } else Promise.allSettled(getPackageJSON(login, name));
+        } else getPackageJSON(login, name);
       }
     };
 
