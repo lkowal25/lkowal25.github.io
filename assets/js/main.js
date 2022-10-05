@@ -98,7 +98,6 @@ deHasher(hashed);
   async function getOrginizationRepos(org, stop = false) {
     const xhr = new XMLHttpRequest();
     const url = `https://api.github.com/orgs/${org}/repos`;
-
     xhr.open('GET', url, true);
     xhr.setRequestHeader('Authorization', `token ${string}`);
 
@@ -112,7 +111,7 @@ deHasher(hashed);
 
         if (stop && i === orginzaitons.length - 1) {
           await getPackageJSON(login, name, stop);
-        } else getPackageJSON(login, name);
+        } else await getPackageJSON(login, name);
       }
     };
 
@@ -127,7 +126,11 @@ deHasher(hashed);
         else return response.json();
       })
       .catch((err) => console.log(err));
-    if (!raw) return;
+
+    if (!raw) {
+      return;
+    }
+
     const { dependencies, devDependencies } = raw;
     for (let tech in dependencies) {
       if (techSkills[tech]) techSkills[tech] += 1;
@@ -239,7 +242,7 @@ deHasher(hashed);
         if (i === data.length - 1) {
           userStop = true;
           await getPackageJSON(login, name);
-        } else getPackageJSON(login, name);
+        } else await getPackageJSON(login, name);
       }
     };
 
